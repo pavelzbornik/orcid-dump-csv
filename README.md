@@ -14,18 +14,31 @@ The script is leveraging XSLT transformation of XML files, [find more about XSLT
 - line separator: `$end_line$`
 - column separator: `¬`
 
-All XSLT files are in the `xslt` folder, if you want to experiment you can use web XSLT editors for example [.NET XSLT Fiddle](https://xsltfiddle.liberty-development.net/) and XML file from the dump.
+### XSLT tinkering
+
+All XSLT files are in the `xslt` folder, if you want to experiment you can use web XSLT editors for example [.NET XSLT Fiddle](https://xsltfiddle.liberty-development.net/) and XML file from the dump. 
+
+For this experimentation recommend to use new line character for visual representations of different rows in the XSLT Fiddle.
+
+Replace `$end_line$` in XSLT
+```xml 
+<xsl:text>$end_line$</xsl:text> <!-- newline character -->
+```
+With newline character `&#10;` to escape rows
+```xml
+<xsl:text>&#10;</xsl:text> <!-- newline character -->
+```
 
 ## Running the script
 
-### Create virtual environment
+### 1. Create virtual environment
 ```sh
 python3 -m venv .venv
 . .venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
-### Running the script
+### 2. Run the script
 
 Script assumes 2021 summaries dump file `ORCID_2021_10_summaries.tar.gz` stored in the same folder with the script and default output folder `data`, both is possible to change with arguments.
 
