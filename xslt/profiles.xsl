@@ -17,7 +17,7 @@
 	  <xsl:value-of select=".//preferences:locale"/><xsl:text>¬</xsl:text>
 	  <xsl:value-of select=".//history:creation-method"/><xsl:text>¬</xsl:text>
 	  <xsl:value-of select=".//history:submission-date"/><xsl:text>¬</xsl:text>
-	  <xsl:value-of select=".//history:last-modified-date"/><xsl:text>¬</xsl:text>
+	  <xsl:value-of select=".//common:last-modified-date"/><xsl:text>¬</xsl:text>
 	  <xsl:value-of select=".//history:claimed"/><xsl:text>¬</xsl:text>
 	  <xsl:value-of select=".//history:verified-email"/><xsl:text>¬</xsl:text>
 	  <xsl:value-of select=".//history:verified-primary-email"/><xsl:text>¬</xsl:text>
@@ -32,6 +32,11 @@
 			<xsl:for-each select="other-name:content">
 			<xsl:value-of select="normalize-space(translate(.,'[¬]',''))" />;</xsl:for-each>
 			
+	  </xsl:for-each><xsl:text>¬</xsl:text>
+	  <xsl:for-each select=".//email:emails/email:email">
+			
+			<xsl:for-each select="email:email">
+			<xsl:value-of select="normalize-space(translate(.,'[¬]',''))" />;</xsl:for-each>
 	  </xsl:for-each><xsl:text>¬</xsl:text>
 	  <xsl:value-of select=".//person:biography/personal-details:content"/><xsl:text>¬</xsl:text>
 	  <xsl:value-of select=".//address:address/address:country"/><xsl:text>¬</xsl:text>

@@ -5,7 +5,7 @@ Scope of this script is to convert ORCID yearly **summaries** XML dump (*ORCID_Y
 Further information about the dump is available at [Bulk data integration guide](https://info.orcid.org/documentation/integration-guide/working-with-bulk-data/), the 2021 file is missing in the list, but is available in the section on  [Public data file use policy](https://info.orcid.org/public-data-file-use-policy/)
 
 ### XSD documentation of the XML files in the dump
-XML files use the same structure as ORCID API and therefore the XSD files available at [ORCID GitHub](https://github.com/ORCID/orcid-model/tree/master/src/main/resources/record_2.1) are the base information source. For simplicity of use, some ORCID XSD templates are included in `xsd` folder of this repo.
+XML files use the same structure as ORCID API and therefore the XSD files available at [ORCID GitHub](https://github.com/ORCID/orcid-model/tree/master/src/main/resources/record_2.1) are the base information source.
 
 
 ## How the script works
@@ -38,13 +38,20 @@ python3 -m venv .venv
 pip3 install -r requirements.txt
 ```
 
-### 2. Run the script
+### 2. Download the dump
 
 Script assumes 2021 summaries dump file `ORCID_2021_10_summaries.tar.gz` stored in the same folder with the script and default output folder `data`, both is possible to change with arguments.
 
+If you want to download the file first you can run download script which will fetch 2021 dump into the script folder
+```sh
+python3 download.py
+```
+
+### 3. Run the script
+
 ### Notice
-- Please note due to the dump size, the script will run for several hours (12+)
-- Have enough free space on your disk
+- Please note due to the dump size, the script will run for several hours (20+)
+- Have enough free space on your disk (50 GB)
 
 Run the script using default settings
 ```sh

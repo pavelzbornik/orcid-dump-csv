@@ -100,10 +100,12 @@ def main(outdir,file):
         writers[i].writerow(headers[i])
 
 
-    import itertools
-    sample_size=1000000
-    for xml in tqdm(itertools.islice(readTar(file), sample_size),total=sample_size):
-    #for xml in tqdm(readTar(file),total=12000000): #using arbitrary 12m file as total number of 2021 extract +- in order to avoid lengthy xml file count
+
+    #to run on the subset
+    # import itertools
+    # sample_size=100000
+    # for xml in tqdm(itertools.islice(readTar(file), sample_size),total=sample_size):
+    for xml in tqdm(readTar(file),total=12638934): #using arbitrary 12m file as total number of 2021 extract +- in order to avoid lengthy xml file count
         # Extract file from tar
         tree = lxml.etree.fromstring(xml)
         #for each output transform xml file and write it into CSVs

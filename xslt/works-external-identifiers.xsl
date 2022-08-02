@@ -24,7 +24,8 @@
     <xsl:value-of select="common:external-id-value"/><xsl:text>¬</xsl:text>
     <xsl:value-of select="common:external-id-normalized"/><xsl:text>¬</xsl:text>
     <xsl:value-of select="common:external-id-normalized/@transient"/><xsl:text>¬</xsl:text>
-    <xsl:value-of select="common:external-id-relationship"/><xsl:text>¬</xsl:text>
+    <xsl:value-of select="common:external-id-url"/><xsl:text>¬</xsl:text>
+	<xsl:value-of select="common:external-id-relationship"/><xsl:text>¬</xsl:text>
     
     <xsl:text>$end_line$</xsl:text> <!-- newline character -->
   </xsl:for-each></xsl:for-each>

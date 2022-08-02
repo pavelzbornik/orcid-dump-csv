@@ -19,6 +19,12 @@
     <xsl:value-of select="common:created-date"/><xsl:text>¬</xsl:text>
     <xsl:value-of select="common:last-modified-date"/><xsl:text>¬</xsl:text>
     <xsl:value-of select="normalize-space(translate(common:role-title,'[¬]',''))" /><xsl:text>¬</xsl:text>
+	<xsl:value-of select="common:start-date/common:year"/><xsl:text>¬</xsl:text>
+    <xsl:value-of select="common:start-date/common:month"/><xsl:text>¬</xsl:text>
+    <xsl:value-of select="common:start-date/common:day"/><xsl:text>¬</xsl:text>
+    <xsl:value-of select="common:end-date/common:year"/><xsl:text>¬</xsl:text>
+    <xsl:value-of select="common:end-date/common:month"/><xsl:text>¬</xsl:text>
+    <xsl:value-of select="common:end-date/common:day"/><xsl:text>¬</xsl:text>
     <xsl:value-of select="normalize-space(translate(common:organization/common:name,'[¬]',''))"/><xsl:text>¬</xsl:text>
     <xsl:value-of select="common:organization/common:address/common:city"/><xsl:text>¬</xsl:text>
     <xsl:value-of select="common:organization/common:address/common:region"/><xsl:text>¬</xsl:text>
