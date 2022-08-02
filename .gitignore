@@ -134,3 +134,6 @@ ORCID_2021_10_summaries.tar.gz
 *.csv
 
 /.vscode
+
+#don't sync notebooks
+*.ipynb
