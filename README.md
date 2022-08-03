@@ -31,10 +31,15 @@ With newline character `&#10;` to escape rows
 
 ## Running the script
 
-### 1. Create virtual environment
+### 1. Create virtual environment and install packages
+
+Recomended to create virtual enviroment
 ```sh
 python3 -m venv .venv
-. .venv/bin/activate
+```
+
+Install packages
+```sh
 pip3 install -r requirements.txt
 ```
 
