@@ -14,6 +14,9 @@ The script is leveraging XSLT transformation of XML files, [find more about XSLT
 - line separator: `$end_line$`
 - column separator: `¬`
 
+### Speed improvements
+To speed up the process, **xml files are first concatenated** by the number defined in `chunk_size`, from tests the chunk size is best between 10-25 and `chunk_size=15` is used in the script. This approach **reduce the runtime by 50%** compared to transforming each individual xml file. Concatenation is done, by string operations with source xml file and new tag `records` is introduced to list ORCID `record:record`.
+
 ### XSLT tinkering
 
 All XSLT files are in the `xslt` folder, if you want to experiment you can use web XSLT editors for example [.NET XSLT Fiddle](https://xsltfiddle.liberty-development.net/) and XML file from the dump. 
@@ -33,7 +36,7 @@ With newline character `&#10;` to escape rows
 
 ### 1. Create virtual environment and install packages
 
-Recomended to create virtual enviroment
+Recommended to create virtual environment
 ```sh
 python3 -m venv .venv
 ```
@@ -45,7 +48,7 @@ pip3 install -r requirements.txt
 
 ### 2. Download the dump
 
-Script assumes 2021 summaries dump file `ORCID_2021_10_summaries.tar.gz` stored in the same folder with the script and default output folder `data`, both is possible to change with arguments.
+Script assumes 2022 summaries dump file `ORCID_2022_10_summaries.tar.gz` stored in the same folder with the script and default output folder `data`, both is possible to change with arguments.
 
 If you want to download the file first you can run download script which will fetch 2021 dump into the script folder
 ```sh
@@ -65,5 +68,5 @@ python3 dump_to_csv.py
 
 Adding file path and output dir arguments
 ```sh
-python3 dump_to_csv.py --file ORCID_2021_10_summaries.tar.gz --outdir csv
+python3 dump_to_csv.py --file ORCID_2022_10_summaries.tar.gz --outdir csv
 ```
