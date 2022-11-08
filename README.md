@@ -50,7 +50,7 @@ pip3 install -r requirements.txt
 
 Script assumes 2022 summaries dump file `ORCID_2022_10_summaries.tar.gz` stored in the same folder with the script and default output folder `data`, both is possible to change with arguments.
 
-If you want to download the file first you can run download script which will fetch 2021 dump into the script folder
+If you want to download the file first you can run download script which will fetch 2022 dump into the script folder
 ```sh
 python3 download.py
 ```
