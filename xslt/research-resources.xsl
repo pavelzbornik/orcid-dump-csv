@@ -9,9 +9,10 @@
 
   <xsl:template match="/">
     
-  <xsl:variable name="orcid_uri"><xsl:value-of select="record:record/common:orcid-identifier/common:uri"/></xsl:variable>
-  <xsl:variable name="orcid_path"><xsl:value-of select="record:record/common:orcid-identifier/common:path"/></xsl:variable>
- 
+  <xsl:for-each select=".//record:record">
+	  <xsl:variable name="orcid_uri"><xsl:value-of select="common:orcid-identifier/common:uri"/></xsl:variable>
+	  <xsl:variable name="orcid_path"><xsl:value-of select="common:orcid-identifier/common:path"/></xsl:variable>
+	 
   <xsl:for-each select=".//research-resource:research-resource-summary">
     <xsl:value-of select="$orcid_uri"/><xsl:text>¬</xsl:text>
     <xsl:value-of select="$orcid_path"/><xsl:text>¬</xsl:text>
@@ -41,7 +42,7 @@
     
     <xsl:text>$end_line$</xsl:text> <!-- newline character -->
   </xsl:for-each>
-  
+  </xsl:for-each>
   
   
   

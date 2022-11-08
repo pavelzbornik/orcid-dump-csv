@@ -6,6 +6,7 @@ import os
 from tqdm import tqdm
 import glob
 import argparse
+import io
 
 
 # %%
@@ -69,6 +70,34 @@ def writeRows(writer,tree,header,xslt):
         if (len(header)<=len(line)):
             writer.writerow(line.split('¬'))
 
+def getMembers(file:str):
+    """
+    Returns all the files in tar
+
+    Args:
+      file (str): path of tar file
+    Returns:
+      files: list of TarFile objects
+    """    
+    print('Getting list of all the files in TarFile, this will take some time')
+    with tarfile.open(file, "r:gz") as tar:
+        return tar.getmembers()
+
+
+def processChunk(chunk,tar):
+    
+    buffer =''
+    for member in chunk:
+        # Extract member
+        if '.xml' in member.name:
+            content=io.BytesIO(tar.extractfile(member).read()).getvalue().decode('utf-8')
+            buffer=buffer+content.replace('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n','')
+
+    buffer='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'+'<records>'+buffer+'</records>'        
+    xml=buffer.encode(encoding='utf-8', errors='strict')
+
+    return lxml.etree.fromstring(xml)
+
 
 def main(outdir,file):
 
@@ -77,6 +106,9 @@ def main(outdir,file):
     files=[]
     filenames=[]
     writers=[]
+
+    #get the number of files this takes some time
+    tar_files=getMembers(file)
 
     #for each XSLT template a CSV file will be generated
     for xslt_file in glob.glob('xslt/*.xsl'):
@@ -100,18 +132,21 @@ def main(outdir,file):
         writers[i].writerow(headers[i])
 
 
+    with tarfile.open(file, "r:gz") as tar:
 
-    #to run on the subset
-    # import itertools
-    # sample_size=100000
-    # for xml in tqdm(itertools.islice(readTar(file), sample_size),total=sample_size):
-    for xml in tqdm(readTar(file),total=12638934): #using arbitrary 12m file as total number of 2021 extract +- in order to avoid lengthy xml file count
-        # Extract file from tar
-        tree = lxml.etree.fromstring(xml)
-        #for each output transform xml file and write it into CSVs
-        for i in range(0,len(files)):
-            writeRows(writers[i],tree,headers[i],xslt_files[i])
-            
+        
+        #from the all tar files generate chunks
+        chunk_size = 15 #number of xml files in chunk
+        chunks = [tar_files[i:i + chunk_size] for i in range(0, len(tar_files), chunk_size)]
+        
+        print(f'Processing {len(chunks)} chunks, each chunk is {chunk_size} xml files. Total files: {len(tar_files)}')
+        for chunk in tqdm(chunks):
+            buffer=processChunk(chunk,tar)
+
+            #for each output transform xml file and write it into CSVs
+            for i in range(0,len(files)):
+                writeRows(writers[i],buffer,headers[i],xslt_files[i])
+                
     #close the CSV files
     for file in files:
         file.close()
@@ -133,7 +168,7 @@ if __name__ == "__main__":
     if args.file:
         file=args.file
     else:
-        file='ORCID_2021_10_summaries.tar.gz'
+        file='ORCID_2022_10_summaries.tar.gz'
     
     
     main(outdir,file)

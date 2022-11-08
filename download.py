@@ -4,8 +4,8 @@ from tqdm import tqdm
 
 
 def main():
-    url ='https://orcid.figshare.com/ndownloader/files/31020067'
-    file ='ORCID_2021_10_summaries.tar.gz'
+    url ='https://orcid.figshare.com/ndownloader/files/37635374'
+    file ='ORCID_2022_10_summaries.tar.gz'
 
     total_size_in_bytes= 21231574177
 

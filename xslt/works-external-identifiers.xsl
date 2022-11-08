@@ -9,9 +9,10 @@
 
   <xsl:template match="/">
     
-  <xsl:variable name="orcid_uri"><xsl:value-of select="record:record/common:orcid-identifier/common:uri"/></xsl:variable>
-  <xsl:variable name="orcid_path"><xsl:value-of select="record:record/common:orcid-identifier/common:path"/></xsl:variable>
- 
+  <xsl:for-each select=".//record:record">
+	  <xsl:variable name="orcid_uri"><xsl:value-of select="common:orcid-identifier/common:uri"/></xsl:variable>
+	  <xsl:variable name="orcid_path"><xsl:value-of select="common:orcid-identifier/common:path"/></xsl:variable>
+	 
   <xsl:for-each select=".//work:work-summary">
     <xsl:variable name="put-code"><xsl:value-of select="@put-code"/></xsl:variable>
     <xsl:variable name="display-index"><xsl:value-of select="@display-index"/></xsl:variable>
@@ -29,7 +30,7 @@
     
     <xsl:text>$end_line$</xsl:text> <!-- newline character -->
   </xsl:for-each></xsl:for-each>
-  
+  </xsl:for-each>
   
   
   

@@ -130,8 +130,9 @@ dmypy.json
 
 
 /ORCID_2021_10_summaries.tar
-ORCID_2021_10_summaries.tar.gz
+*.tar.gz
 *.csv
+*.xml
 
 /.vscode
 
