@@ -2,7 +2,7 @@
 
 Scope of this script is to convert ORCID yearly **summaries** XML dump (*ORCID_YYYY_MM_summaries.tar.gz*) into CSV, activities files are not processed.
 
-Further information about the dump is available at [Bulk data integration guide](https://info.orcid.org/documentation/integration-guide/working-with-bulk-data/), the 2021 file is missing in the list, but is available in the section on  [Public data file use policy](https://info.orcid.org/public-data-file-use-policy/)
+Further information about the dump is available at [Bulk data integration guide](https://info.orcid.org/documentation/integration-guide/working-with-bulk-data/), the 2022 file is missing in the list, but is available in the FAQ section  [How do I get the public data file](https://support.orcid.org/hc/en-us/articles/360006897394-How-do-I-get-the-public-data-file-)
 
 ### XSD documentation of the XML files in the dump
 XML files use the same structure as ORCID API and therefore the XSD files available at [ORCID GitHub](https://github.com/ORCID/orcid-model/tree/master/src/main/resources/record_2.1) are the base information source.
