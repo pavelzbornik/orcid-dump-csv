@@ -181,6 +181,9 @@ def main(outdir,file,workers=None):
     # Determine number of workers
     if workers is None:
         workers = multiprocessing.cpu_count()
+    elif workers < 1:
+        print(f"Warning: workers must be at least 1, using 1 worker")
+        workers = 1
     
     print(f'Processing {len(chunks)} chunks, each chunk is {chunk_size} xml files. Total files: {len(tar_files)}')
     print(f'Using {workers} parallel workers')
@@ -221,6 +224,6 @@ if __name__ == "__main__":
     else:
         file='ORCID_2022_10_summaries.tar.gz'
     
-    workers = args.workers if args.workers else None
+    workers = args.workers if args.workers is not None else None
     
     main(outdir,file,workers)
