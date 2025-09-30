@@ -7,6 +7,8 @@ from tqdm import tqdm
 import glob
 import argparse
 import io
+from concurrent.futures import ProcessPoolExecutor
+import multiprocessing
 
 
 # %%
@@ -99,7 +101,47 @@ def processChunk(chunk,tar):
     return lxml.etree.fromstring(xml)
 
 
-def main(outdir,file):
+def processChunkWorker(args):
+    """
+    Worker function for parallel processing of chunks.
+    Opens the tar file, processes the chunk, applies all XSLT transformations,
+    and returns the resulting CSV rows.
+    
+    Args:
+        args: tuple of (chunk, tar_file_path, xslt_file_paths)
+    Returns:
+        list of lists: Each inner list contains rows for one XSLT template
+    """
+    chunk, tar_file_path, xslt_file_paths = args
+    
+    # Open tar file in worker process
+    with tarfile.open(tar_file_path, "r:gz") as tar:
+        # Process the chunk
+        buffer = processChunk(chunk, tar)
+    
+    # Apply each XSLT transformation and collect rows
+    results = []
+    for xslt_file in xslt_file_paths:
+        xslt = lxml.etree.parse(xslt_file)
+        header = getHeaderFromXSLT(xslt)
+        
+        # Transform and get rows
+        transform = lxml.etree.XSLT(xslt)
+        transformed = transform(buffer)
+        lines = str(transformed).split('$end_line$')
+        
+        rows = []
+        for line in lines:
+            # Collect only if there are values in the line
+            if len(header) <= len(line):
+                rows.append(line.split('¬'))
+        
+        results.append(rows)
+    
+    return results
+
+
+def main(outdir,file,workers=None):
 
     xslt_files=[]
     headers=[]
@@ -111,7 +153,8 @@ def main(outdir,file):
     tar_files=getMembers(file)
 
     #for each XSLT template a CSV file will be generated
-    for xslt_file in glob.glob('xslt/*.xsl'):
+    xslt_file_paths = glob.glob('xslt/*.xsl')
+    for xslt_file in xslt_file_paths:
         #load XSLT templates into list
         xslt=lxml.etree.parse(xslt_file)
         xslt_files.append(xslt)
@@ -131,21 +174,28 @@ def main(outdir,file):
     for i in range(0,len(files)):
         writers[i].writerow(headers[i])
 
-
-    with tarfile.open(file, "r:gz") as tar:
-
-        
-        #from the all tar files generate chunks
-        chunk_size = 15 #number of xml files in chunk
-        chunks = [tar_files[i:i + chunk_size] for i in range(0, len(tar_files), chunk_size)]
-        
-        print(f'Processing {len(chunks)} chunks, each chunk is {chunk_size} xml files. Total files: {len(tar_files)}')
-        for chunk in tqdm(chunks):
-            buffer=processChunk(chunk,tar)
-
-            #for each output transform xml file and write it into CSVs
-            for i in range(0,len(files)):
-                writeRows(writers[i],buffer,headers[i],xslt_files[i])
+    #from the all tar files generate chunks
+    chunk_size = 15 #number of xml files in chunk
+    chunks = [tar_files[i:i + chunk_size] for i in range(0, len(tar_files), chunk_size)]
+    
+    # Determine number of workers
+    if workers is None:
+        workers = multiprocessing.cpu_count()
+    
+    print(f'Processing {len(chunks)} chunks, each chunk is {chunk_size} xml files. Total files: {len(tar_files)}')
+    print(f'Using {workers} parallel workers')
+    
+    # Prepare arguments for worker processes
+    worker_args = [(chunk, file, xslt_file_paths) for chunk in chunks]
+    
+    # Process chunks in parallel
+    with ProcessPoolExecutor(max_workers=workers) as executor:
+        # Use tqdm to track progress
+        for result in tqdm(executor.map(processChunkWorker, worker_args), total=len(chunks)):
+            # result is a list of lists: one list of rows per XSLT template
+            for i in range(len(files)):
+                for row in result[i]:
+                    writers[i].writerow(row)
                 
     #close the CSV files
     for file in files:
@@ -157,6 +207,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--outdir", type=str, help="output folder")
     parser.add_argument("--file", type=str, help="tar file name including extension")
+    parser.add_argument("--workers", type=int, help="number of parallel workers (default: number of CPU cores)")
     args = parser.parse_args()
     
     if args.outdir:
@@ -170,5 +221,6 @@ if __name__ == "__main__":
     else:
         file='ORCID_2022_10_summaries.tar.gz'
     
+    workers = args.workers if args.workers else None
     
-    main(outdir,file)
+    main(outdir,file,workers)

@@ -17,6 +17,8 @@ The script is leveraging XSLT transformation of XML files, [find more about XSLT
 ### Speed improvements
 To speed up the process, **xml files are first concatenated** by the number defined in `chunk_size`, from tests the chunk size is best between 10-25 and `chunk_size=15` is used in the script. This approach **reduce the runtime by 50%** compared to transforming each individual xml file. Concatenation is done, by string operations with source xml file and new tag `records` is introduced to list ORCID `record:record`.
 
+**Parallel processing** is enabled by default using Python's `ProcessPoolExecutor`. The script automatically detects the number of CPU cores and processes multiple chunks simultaneously, significantly reducing overall runtime on multi-core systems. You can control the number of parallel workers with the `--workers` argument.
+
 ### XSLT tinkering
 
 All XSLT files are in the `xslt` folder, if you want to experiment you can use web XSLT editors for example [.NET XSLT Fiddle](https://xsltfiddle.liberty-development.net/) and XML file from the dump. 
@@ -58,7 +60,8 @@ python3 download.py
 ### 3. Run the script
 
 ### Notice
-- Please note due to the dump size, the script will run for several hours (20+)
+- Please note due to the dump size, the script will run for several hours (20+) on a single CPU core
+- Parallel processing is enabled by default and will significantly reduce runtime on multi-core systems
 - Have enough free space on your disk (50 GB)
 
 Run the script using default settings
@@ -69,4 +72,9 @@ python3 dump_to_csv.py
 Adding file path and output dir arguments
 ```sh
 python3 dump_to_csv.py --file ORCID_2022_10_summaries.tar.gz --outdir csv
+```
+
+Controlling parallel workers (useful for memory-constrained systems)
+```sh
+python3 dump_to_csv.py --workers 2
 ```
